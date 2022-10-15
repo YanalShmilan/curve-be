@@ -7,6 +7,7 @@ const cors = require('cors');
 const transporter = nodemailer.createTransport({
   port: 587, // true for 465, false for other ports
   host: 'smtp.gmail.com',
+  pool: true,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.APP_PASSWORD,
@@ -40,8 +41,9 @@ route.post('/send', (req, res) => {
 
   transporter.sendMail(mailData, function (err, info) {
     if (err) {
-      res.status(500).send({
-        email: req.email,
+      console.log(err);
+      res.status(500).json({
+        email: err,
       });
     } else {
       console.log(req.body);
