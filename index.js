@@ -42,22 +42,30 @@ route.post('/send', (req, res) => {
   transporter.sendMail(mailData, function (err, info) {
     if (err) {
       console.log(err);
-      res.status(500).json({
-        email: err,
-      });
+      res
+        .status(500)
+        .json({
+          email: err,
+        })
+        .end();
     } else {
-      console.log(req.body);
-      res.status(200).send({
-        email: req.email,
-      });
+      res
+        .status(200)
+        .json({
+          email: req.body.email,
+        })
+        .end();
     }
   });
 });
 
 route.get('/check', (req, res) => {
-  res.status(200).send({
-    message: 'Server is up and running',
-  });
+  res
+    .status(200)
+    .send({
+      message: 'Server is up and running',
+    })
+    .end();
 });
 
 app.listen(port, () => {
