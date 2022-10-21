@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
+const cron = require('node-cron');
 
 const transporter = nodemailer.createTransport({
   port: 587, // true for 465, false for other ports
-  host: 'smtp.gmail.com',
+  host: 'smtp.office365.com',
   pool: true,
+  maxConnections: 3,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.APP_PASSWORD,
