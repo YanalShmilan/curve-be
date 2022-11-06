@@ -5,6 +5,8 @@ require('dotenv').config();
 const cors = require('cors');
 const cron = require('node-cron');
 
+let password = process.env.APP_PASSWORD;
+
 const transporter = nodemailer.createTransport({
   port: 587, // true for 465, false for other ports
   host: 'smtp.office365.com',
@@ -12,7 +14,7 @@ const transporter = nodemailer.createTransport({
   maxConnections: 3,
   auth: {
     user: process.env.EMAIL,
-    pass: process.env.APP_PASSWORD,
+    pass: password,
   },
   secure: false,
 });
@@ -32,7 +34,11 @@ const port = process.env.PORT || 8000;
 app.use('/v1', route);
 
 route.post('/send', (req, res) => {
-  const { text, email, message, subject, html } = req.body;
+  const { text, email, message, subject, html, pass } = req.body;
+  if (pass !== password) {
+    res.status(401).send('Unauthorized').end();
+  }
+
   const mailData = {
     from: process.env.EMAIL, // sender address
     to: email, // list of receivers
